@@ -1,51 +1,52 @@
 #include "FileManager.h"
-#include "workWithJson.h"
 
-#include <jsoncpp/json/json.h>
-#include <fstream>
-#include <sstream>
-#include <iostream>
+FileManager::FileManager(QObject *parent) : QObject(parent) {}
 
-FileManager::FileManager(const string& fname) : m_fileName(fname) {}
-std::shared_ptr<std::vector<User>> FileManager::readUsers() const {
-    auto users = std::make_shared<std::vector<User>>();
-    std::ifstream ifs(m_fileName);
-    if (ifs.is_open()) {
-        std::stringstream buffer;
-        buffer << ifs.rdbuf();
-        string content = buffer.str();
-        Json::Value jsonArray;
-        Json::Reader reader;
-        if (reader.parse(content, jsonArray)) {
-            for (const auto& j : jsonArray) {
-                if (!j.empty()) {
-                    users->push_back(getUserFromJson(j));
-                }
-            }
-        }
-    }
-    return users;
+bool FileManager::serializeUser(const User& user, const QString& fileName)
+{
+    qDebug() << "serializeUser";
+    QJsonObject jsonObj;
+    jsonObj["name"] = QString::fromStdString(user.getName());
+    jsonObj["age"] = user.getAge();
+    jsonObj["birthdayDate"] =  QString::fromStdString(user.getBirthdayDate());
+    QJsonDocument jsonDoc(jsonObj);
+    return writeFile(jsonDoc, fileName);
 }
-bool FileManager::writeUsers(const std::vector<User>& users) const {
-    std::ofstream ofs(m_fileName);
-    if (!ofs.is_open()) {
-        return false; // Failed to open the file for writing
+
+
+User FileManager::deserializeUser(const QString& fileName)
+{
+    QJsonDocument jsonDoc = readFile(fileName);
+    QJsonObject jsonObj = jsonDoc.object();
+    std::string name = jsonObj["name"].toString().toStdString();
+    int age = jsonObj["age"].toInt();
+    std::string birthdayDate = jsonObj["birthdayDate"].toString().toStdString();
+    return User(name, age, birthdayDate);
+}
+
+QJsonDocument FileManager::readFile(const QString& fileName)
+{
+    QFile file(fileName);
+    if (!file.open(QIODevice::ReadOnly)) {
+        return QJsonDocument();
     }
-    ofs.seekp(0, std::ios::end);
-    bool isEmpty = (ofs.tellp() == 0);
-    if (isEmpty) {
-        ofs << "[";
+
+    QByteArray jsonData = file.readAll();
+    file.close();
+
+    return QJsonDocument::fromJson(jsonData);
+}
+
+bool FileManager::writeFile(const QJsonDocument& jsonDoc, const QString& fileName)
+{
+    QFile file(fileName);
+    qDebug() << "write to file";
+    if (!file.open(QIODevice::WriteOnly)) {
+        return false;
     }
-    for (size_t i = 0; i < users.size(); ++i) {
-        if (i > 0 || !isEmpty) {
-            ofs << ",";
-        }
-        Json::Value jsonUser = makeJsonUser(users[i]);
-        ofs << jsonUser;
-    }
-    if (isEmpty) {
-        ofs << "]";
-    }
-    ofs.close();
+
+    file.write(jsonDoc.toJson());
+    file.close();
+
     return true;
 }

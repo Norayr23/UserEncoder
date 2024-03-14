@@ -1,7 +1,8 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include "UserCoordinator.h"
+#include "UserFileManager.h"
+
 #include <QMainWindow>
 
 QT_BEGIN_NAMESPACE
@@ -19,14 +20,15 @@ public:
     ~MainWindow();
 
 private slots:
-    void on_pushButton_clicked();
+    void on_pushButton_serialize_clicked();
 
-    void on_pushButton_login_clicked();
+    void on_verticalGroupBox_2_clicked();
 
-    void on_pushButton_register_clicked();
+    void on_pushButton_deserialize_clicked();
 
 private:
     Ui::MainWindow *ui;
-    UserCoordinator m_us;
+    UserFileManager user_file_manager;
+
 };
 #endif // MAINWINDOW_H

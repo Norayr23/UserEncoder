@@ -11,7 +11,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
-find_package(jsoncpp REQUIRED)
 
 set(PROJECT_SOURCES
         main.cpp
@@ -21,25 +20,16 @@ set(PROJECT_SOURCES
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
-
-qt_add_executable(Login_App
+    qt_add_executable(Login_App
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
-        FileManager.cpp
-        FileManager.h
-        workWithJson.h
         User.h
         User.cpp
-        Validator.h
-        Validator.cpp
-        UserCoordinator.h
-        UserCoordinator.cpp
-        account.h account.cpp account.ui
+        FileManager.h
+        FileManager.cpp
+        UserFileManager.h
+        UserFileManager.cpp
     )
-target_sources(Login_App
-  PRIVATE
-    submission.h submission.cpp submission.ui
-)
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET Login_App APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
 #                 ${CMAKE_CURRENT_SOURCE_DIR}/android)
@@ -84,14 +74,3 @@ install(TARGETS Login_App
 if(QT_VERSION_MAJOR EQUAL 6)
     qt_finalize_executable(Login_App)
 endif()
-target_link_libraries(Login_App PRIVATE
-    Qt${QT_VERSION_MAJOR}::Widgets
-    ${JSONCPP_LIBRARIES}
-)
-
-# Specify the include directory for jsoncpp
-target_include_directories(Login_App PRIVATE
-    ${JSONCPP_INCLUDE_DIRS}
-)
-
-

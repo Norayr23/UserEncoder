@@ -2,33 +2,21 @@
 #define USER_H
 
 #include <string>
-using std::string;
 
 class User {
 public:
-    enum class Gender { Male, Female };
     User();
-    User(const string& name, const string& lastName, const string& userName, const string& password,
-         Gender gender, size_t age);
-    void setName(const string& name);
-    string getName() const;
-    void setLastName(const string& lastName);
-    string getLastName() const ;
-    void setPassword(const string& password);
-    string getPassword() const;
-    void setUserName(const string& userName);
-    string getUserName() const;
-    void setAge(size_t age);
-    size_t getAge() const;
-    void setGender(Gender gender);
-    Gender getGender() const;
+    User(const std::string& name, int age, const std::string& birthdayDate);
+    std::string getName() const;
+    int getAge() const;
+    std::string getBirthdayDate() const;
+    void setName(const std::string& name);
+    void setAge(int age);
+    void setBirthdayDate(const std::string& birthdayDate);
 private:
-    size_t m_age;
-    string m_name;
-    string m_lastName;
-    string m_password;
-    string m_userName;
-    Gender m_gender;
+    std::string name;
+    int age;
+    std::string birthdayDate;
 };
 
 #endif // USER_H

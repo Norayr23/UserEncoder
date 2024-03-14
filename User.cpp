@@ -1,18 +1,30 @@
 #include "User.h"
 
-User::User() : m_age{} {}
-User::User(const string& name, const string& lastName, const string& userName, const string& password,
-           Gender gender, size_t age) : m_name{name}, m_lastName{lastName}, m_userName{userName},
-    m_password{password}, m_gender{gender}, m_age{age} {}
-void User::setName(const string& name) { m_name = name; }
-string User::getName() const { return m_name; }
-void  User::setLastName(const string& lastName) { m_lastName = lastName; }
-string User::getLastName() const { return m_lastName; }
-void  User::setPassword(const string& password) { m_password = password; }
-string User::getPassword() const { return m_password; }
-void User::setUserName(const string& userName) { m_userName = userName; }
-string User::getUserName() const { return m_userName; }
-void User::setAge(size_t age) { m_age = age; }
-size_t User::getAge() const { return m_age; }
-void User::setGender(Gender gender) { m_gender = gender; }
-User::Gender User::getGender() const { return m_gender; }
+User::User() : name(""), age(0), birthdayDate("") {}
+
+User::User(const std::string& name, int age, const std::string& birthdayDate)
+    : name(name), age(age), birthdayDate(birthdayDate) {}
+
+std::string User::getName() const {
+    return name;
+}
+
+int User::getAge() const {
+    return age;
+}
+
+std::string User::getBirthdayDate() const {
+    return birthdayDate;
+}
+
+void User::setName(const std::string& name) {
+    this->name = name;
+}
+
+void User::setAge(int age) {
+    this->age = age;
+}
+
+void User::setBirthdayDate(const std::string& birthdayDate) {
+    this->birthdayDate = birthdayDate;
+}

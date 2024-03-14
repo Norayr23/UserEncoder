@@ -1,12 +1,7 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
-#include "QMessageBox"
-#include "UserCoordinator.h"
-#include "Validator.h"
-#include <QLabel>
-#include <QString>
-#include "submission.h"
-#include "account.h"
+
+#include <QMessageBox>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -18,38 +13,40 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
     delete ui;
+
 }
 
-void MainWindow::on_pushButton_login_clicked()
+#include <QMessageBox>
+
+void MainWindow::on_pushButton_serialize_clicked()
 {
-    auto userName  = ui->lineEdit_UserName->text().toStdString();
-    removeSpaces(userName);
-    if (userName.empty()) {
-         QMessageBox::warning(this, "Warning", "Please input your user name");
-        return;
+    QString name = ui->lineEdit_name->text();
+    int age = ui->spinBox_age->value();
+    QString birthdayDate = ui->dateEdit->date().toString("yyyy-MM-dd");
+    user_file_manager.setName(name.toStdString());
+    user_file_manager.setAge(age);
+    user_file_manager.setBirthdayDate(birthdayDate.toStdString());
+    user_file_manager.serialize();
+    if (user_file_manager.isSerialized()) {
+        QMessageBox::information(this, "Success", "User data serialized successfully.");
+    } else {
+        QMessageBox::critical(this, "Error", "Failed to serialize user data.");
     }
-    auto password = ui->lineEdit_Password->text().toStdString();
-    removeSpaces(password);
-    if (password.empty()) {
-        QMessageBox::warning(this, "Warning", "Please input your password");
-        return;
-    }
-    auto user = m_us.getUser(userName, password);
-    if (!user) {
-         QMessageBox::warning(this, "Warning", "Wrong user name or password");
-        return;
-    }
-    auto ac = new Account(this, *user);
-    ac->setAttribute(Qt::WA_DeleteOnClose);  // Set to delete the widget when closed
-    connect(ac, &QDialog::finished, ac, &QObject::deleteLater);
-    ac->show();
 }
 
-void MainWindow::on_pushButton_register_clicked()
+
+void MainWindow::on_pushButton_deserialize_clicked()
 {
-    auto sw = new Submission(this, &m_us);
-    sw->setAttribute(Qt::WA_DeleteOnClose);  // Set to delete the widget when closed
-    connect(sw, &QDialog::finished, sw, &QObject::deleteLater);
-    sw->show();
+    // Deserialize user data
+    if (user_file_manager.deserialize()) {
+        // Update UI elements with deserialized user data
+        ui->lineEdit_name->setText(QString::fromStdString(user_file_manager.getName()));
+        ui->spinBox_age->setValue(user_file_manager.getAge());
+        ui->dateEdit->setDate(QDate::fromString(QString::fromStdString(user_file_manager.getBirthdayDate()), "yyyy-MM-dd"));
+
+        QMessageBox::information(this, "Success", "User data deserialized successfully.");
+    } else {
+        QMessageBox::critical(this, "Error", "Failed to deserialize user data.");
+    }
 }
 
