@@ -2,8 +2,8 @@
 #define USERFILEMANAGER_H
 
 #include <string>
-#include "User.h"
-#include "FileManager.h"
+#include "../user/User.h"
+#include "../file_manager/FileManager.h"
 
 class UserFileManager {
 public:

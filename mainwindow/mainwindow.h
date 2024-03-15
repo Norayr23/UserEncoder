@@ -1,7 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include "UserFileManager.h"
+#include "../user_file_manager/UserFileManager.h"
 
 #include <QMainWindow>
 
@@ -21,8 +21,6 @@ public:
 
 private slots:
     void on_pushButton_serialize_clicked();
-
-    void on_verticalGroupBox_2_clicked();
 
     void on_pushButton_deserialize_clicked();
 

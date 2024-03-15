@@ -1,7 +1,7 @@
 #ifndef FILEMANAGER_H
 #define FILEMANAGER_H
 
-#include "User.h"
+#include "../user/User.h"
 
 
 #include <QObject>

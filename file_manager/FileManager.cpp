@@ -4,7 +4,6 @@ FileManager::FileManager(QObject *parent) : QObject(parent) {}
 
 bool FileManager::serializeUser(const User& user, const QString& fileName)
 {
-    qDebug() << "serializeUser";
     QJsonObject jsonObj;
     jsonObj["name"] = QString::fromStdString(user.getName());
     jsonObj["age"] = user.getAge();
@@ -40,7 +39,6 @@ QJsonDocument FileManager::readFile(const QString& fileName)
 bool FileManager::writeFile(const QJsonDocument& jsonDoc, const QString& fileName)
 {
     QFile file(fileName);
-    qDebug() << "write to file";
     if (!file.open(QIODevice::WriteOnly)) {
         return false;
     }
